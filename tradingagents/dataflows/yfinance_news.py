@@ -3,6 +3,7 @@
 import yfinance as yf
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from .utils import map_symbol
 
 
 def _extract_article_data(article: dict) -> dict:
@@ -62,6 +63,9 @@ def get_news_yfinance(
     Returns:
         Formatted string containing news articles
     """
+    # Map symbol to correct ticker
+    ticker = map_symbol(ticker, "yfinance")
+
     try:
         stock = yf.Ticker(ticker)
         news = stock.get_news(count=20)

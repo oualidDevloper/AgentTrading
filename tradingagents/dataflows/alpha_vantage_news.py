@@ -1,4 +1,5 @@
 from .alpha_vantage_common import _make_api_request, format_datetime_for_api
+from .utils import map_symbol
 
 def get_news(ticker, start_date, end_date) -> dict[str, str] | str:
     """Returns live and historical market news & sentiment data from premier news outlets worldwide.
@@ -13,6 +14,8 @@ def get_news(ticker, start_date, end_date) -> dict[str, str] | str:
     Returns:
         Dictionary containing news sentiment data or JSON string.
     """
+    # Map symbol to correct ticker
+    ticker = map_symbol(ticker, "alpha_vantage")
 
     params = {
         "tickers": ticker,
@@ -63,6 +66,8 @@ def get_insider_transactions(symbol: str) -> dict[str, str] | str:
     Returns:
         Dictionary containing insider transaction data or JSON string.
     """
+    # Map symbol to correct ticker
+    symbol = map_symbol(symbol, "alpha_vantage")
 
     params = {
         "symbol": symbol,

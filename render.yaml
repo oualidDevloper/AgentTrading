@@ -1,0 +1,25 @@
+services:
+  - type: worker
+    name: trading-agents-automation
+    env: docker
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    plan: free # or your preferred plan
+    schedule: "30 14 * * 1-5" # 14:30 UTC = 9:30 AM EST (Market Open), Mon-Fri
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: LLM_PROVIDER
+        value: openai # or z.ai
+      - key: LLM_MODEL
+        value: gpt-4o
+      - key: PYTHONPATH
+        value: "/"

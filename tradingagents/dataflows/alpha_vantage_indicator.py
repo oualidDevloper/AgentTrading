@@ -1,4 +1,5 @@
 from .alpha_vantage_common import _make_api_request
+from .utils import map_symbol
 
 def get_indicator(
     symbol: str,
@@ -24,6 +25,9 @@ def get_indicator(
     Returns:
         String containing indicator values and description
     """
+    # Map symbol to correct ticker
+    symbol = map_symbol(symbol, "alpha_vantage")
+
     from datetime import datetime
     from dateutil.relativedelta import relativedelta
 

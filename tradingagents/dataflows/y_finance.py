@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 import yfinance as yf
 import os
 from .stockstats_utils import StockstatsUtils, _clean_dataframe
+from .utils import map_symbol
 
 def get_YFin_data_online(
     symbol: Annotated[str, "ticker symbol of the company"],
@@ -14,7 +15,9 @@ def get_YFin_data_online(
     datetime.strptime(start_date, "%Y-%m-%d")
     datetime.strptime(end_date, "%Y-%m-%d")
 
-    # Create ticker object
+    # Map symbol to correct ticker
+    symbol = map_symbol(symbol, "yfinance")
+
     ticker = yf.Ticker(symbol.upper())
 
     # Fetch historical data for the specified date range
@@ -136,6 +139,9 @@ def get_stock_stats_indicators_window(
     end_date = curr_date
     curr_date_dt = datetime.strptime(curr_date, "%Y-%m-%d")
     before = curr_date_dt - relativedelta(days=look_back_days)
+
+    # Map symbol to correct ticker
+    symbol = map_symbol(symbol, "yfinance")
 
     # Optimized: Get stock data once and calculate indicators for all dates
     try:
@@ -275,6 +281,9 @@ def get_stockstats_indicator(
     ],
 ) -> str:
 
+    # Map symbol to correct ticker
+    symbol = map_symbol(symbol, "yfinance")
+
     curr_date_dt = datetime.strptime(curr_date, "%Y-%m-%d")
     curr_date = curr_date_dt.strftime("%Y-%m-%d")
 
@@ -297,7 +306,9 @@ def get_fundamentals(
     ticker: Annotated[str, "ticker symbol of the company"],
     curr_date: Annotated[str, "current date (not used for yfinance)"] = None
 ):
-    """Get company fundamentals overview from yfinance."""
+    # Map symbol to correct ticker
+    ticker = map_symbol(ticker, "yfinance")
+
     try:
         ticker_obj = yf.Ticker(ticker.upper())
         info = ticker_obj.info
@@ -355,7 +366,9 @@ def get_balance_sheet(
     freq: Annotated[str, "frequency of data: 'annual' or 'quarterly'"] = "quarterly",
     curr_date: Annotated[str, "current date (not used for yfinance)"] = None
 ):
-    """Get balance sheet data from yfinance."""
+    # Map symbol to correct ticker
+    ticker = map_symbol(ticker, "yfinance")
+
     try:
         ticker_obj = yf.Ticker(ticker.upper())
         
@@ -385,7 +398,9 @@ def get_cashflow(
     freq: Annotated[str, "frequency of data: 'annual' or 'quarterly'"] = "quarterly",
     curr_date: Annotated[str, "current date (not used for yfinance)"] = None
 ):
-    """Get cash flow data from yfinance."""
+    # Map symbol to correct ticker
+    ticker = map_symbol(ticker, "yfinance")
+
     try:
         ticker_obj = yf.Ticker(ticker.upper())
         
@@ -415,7 +430,9 @@ def get_income_statement(
     freq: Annotated[str, "frequency of data: 'annual' or 'quarterly'"] = "quarterly",
     curr_date: Annotated[str, "current date (not used for yfinance)"] = None
 ):
-    """Get income statement data from yfinance."""
+    # Map symbol to correct ticker
+    ticker = map_symbol(ticker, "yfinance")
+
     try:
         ticker_obj = yf.Ticker(ticker.upper())
         
@@ -443,7 +460,9 @@ def get_income_statement(
 def get_insider_transactions(
     ticker: Annotated[str, "ticker symbol of the company"]
 ):
-    """Get insider transactions data from yfinance."""
+    # Map symbol to correct ticker
+    ticker = map_symbol(ticker, "yfinance")
+
     try:
         ticker_obj = yf.Ticker(ticker.upper())
         data = ticker_obj.insider_transactions

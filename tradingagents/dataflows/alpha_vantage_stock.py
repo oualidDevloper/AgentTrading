@@ -1,5 +1,6 @@
 from datetime import datetime
 from .alpha_vantage_common import _make_api_request, _filter_csv_by_date_range
+from .utils import map_symbol
 
 def get_stock(
     symbol: str,
@@ -18,6 +19,9 @@ def get_stock(
     Returns:
         CSV string containing the daily adjusted time series data filtered to the date range.
     """
+    # Map symbol to correct ticker
+    symbol = map_symbol(symbol, "alpha_vantage")
+
     # Parse dates to determine the range
     start_dt = datetime.strptime(start_date, "%Y-%m-%d")
     today = datetime.now()

@@ -30,9 +30,17 @@ Guidelines for Decision-Making:
 3. **Refine the Trader's Plan**: Start with the trader's original plan, **{trader_plan}**, and adjust it based on the analysts' insights.
 4. **Learn from Past Mistakes**: Use lessons from **{past_memory_str}** to address prior misjudgments and improve the decision you are making now to make sure you don't make a wrong BUY/SELL/HOLD call that loses money.
 
-Deliverables:
-- A clear and actionable recommendation: Buy, Sell, or Hold.
-- Detailed reasoning anchored in the debate and past reflections.
+Deliverables (MANDATORY FORMAT):
+1. **Action**: Clearly state BUY, SELL, or HOLD.
+2. **Trade Levels**: 
+   - **Entry Point**: $XXX.XX
+   - **Stop Loss (SL)**: $XXX.XX
+   - **Take Profit 1 (TP1)**: $XXX.XX
+   - **Take Profit 2 (TP2)**: $XXX.XX
+   - **Take Profit 3 (TP3)**: $XXX.XX
+3. **Rationale**: A detailed paragraph explaining the choice.
+
+YOUR ENTIRE RESPONSE MUST INCLUDE THE ABOVE LEVELS OR AT LEAST ONE COMPREHENSIVE TP. DO NOT SKIP THESE.
 
 ---
 

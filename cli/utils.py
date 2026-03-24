@@ -18,7 +18,7 @@ ANALYST_ORDER = [
 def get_ticker() -> str:
     """Prompt the user to enter a ticker symbol."""
     ticker = questionary.text(
-        "Enter the ticker symbol to analyze:",
+        "Enter the ticker symbol to analyze (e.g. AAPL, or BTC-USD for Bitcoin):",
         validate=lambda x: len(x.strip()) > 0 or "Please enter a valid ticker symbol.",
         style=questionary.Style(
             [
@@ -32,7 +32,15 @@ def get_ticker() -> str:
         console.print("\n[red]No ticker symbol provided. Exiting...[/red]")
         exit(1)
 
-    return ticker.strip().upper()
+    ticker = ticker.strip().upper()
+    if ticker == "BTC":
+        ticker = "BTC-USD"
+        console.print("[yellow]Note: 'BTC' was automatically converted to 'BTC-USD' to fetch the cryptocurrency instead of the Grayscale ETF.[/yellow]")
+    elif ticker == "ETH":
+        ticker = "ETH-USD"
+        console.print("[yellow]Note: 'ETH' was automatically converted to 'ETH-USD'.[/yellow]")
+        
+    return ticker
 
 
 def get_analysis_date() -> str:
@@ -164,6 +172,11 @@ def select_shallow_thinking_agent(provider) -> str:
             ("GPT-OSS:latest (20B, local)", "gpt-oss:latest"),
             ("GLM-4.7-Flash:latest (30B, local)", "glm-4.7-flash:latest"),
         ],
+        "z.ai": [
+            ("GLM 4.7 Flash", "glm-4.7-flash"),
+            ("GLM 4.5 Air", "glm-4.5-air"),
+            ("GLM 4.7", "glm-4.7"),
+        ],
     }
 
     choice = questionary.select(
@@ -231,6 +244,13 @@ def select_deep_thinking_agent(provider) -> str:
             ("GPT-OSS:latest (20B, local)", "gpt-oss:latest"),
             ("Qwen3:latest (8B, local)", "qwen3:latest"),
         ],
+        "z.ai": [
+            ("GLM-5", "glm-5"),
+            ("GLM-5 Turbo", "glm-5-turbo"),
+            ("GLM-4.7", "glm-4.7"),
+            ("GLM 4.7 Flash", "glm-4.7-flash"),
+            ("GLM-4.6", "glm-4.6"),
+        ],
     }
 
     choice = questionary.select(
@@ -265,6 +285,7 @@ def select_llm_provider() -> tuple[str, str]:
         ("xAI", "https://api.x.ai/v1"),
         ("Openrouter", "https://openrouter.ai/api/v1"),
         ("Ollama", "http://localhost:11434/v1"),
+        ("Z.AI", "https://api.z.ai/api/paas/v4"),
     ]
     
     choice = questionary.select(

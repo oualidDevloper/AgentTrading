@@ -26,6 +26,56 @@ def decorate_all_methods(decorator):
     return class_decorator
 
 
+
+SYMBOL_MAPPING = {
+    "yfinance": {
+        "S&P 500": "^GSPC",
+        "SPX": "^GSPC",
+        "NASDAQ 100": "^NDX",
+        "NDX": "^NDX",
+        "DOW JONES": "^DJI",
+        "DJI": "^DJI",
+        "FTSE 100": "^FTSE",
+        "DAX": "^GDAXI",
+        "CAC 40": "^FCHI",
+        "NIKKEI 225": "^N225",
+        "BTC": "BTC-USD",
+        "ETH": "ETH-USD",
+    },
+    "alpha_vantage": {
+        "S&P 500": "SPX",
+        "NASDAQ 100": "NDX",
+        "DOW JONES": "DJI",
+    }
+}
+
+def map_symbol(symbol: str, vendor: str) -> str:
+    """
+    Maps common index names or aliases to vendor-specific tickers.
+    
+    Args:
+        symbol: The input symbol or name (e.g., "S&P 500")
+        vendor: The data vendor ("yfinance" or "alpha_vantage")
+        
+    Returns:
+        The mapped ticker symbol, or the original symbol if no mapping exists.
+    """
+    if not symbol:
+        return symbol
+        
+    vendor_map = SYMBOL_MAPPING.get(vendor.lower(), {})
+    
+    # Try case-insensitive match
+    symbol_upper = symbol.strip().upper()
+    
+    # Check for direct matches in the mapping
+    for key, mapped_value in vendor_map.items():
+        if key.upper() == symbol_upper:
+            return mapped_value
+            
+    # If no mapping found, return original (but stripped)
+    return symbol.strip()
+
 def get_next_weekday(date):
 
     if not isinstance(date, datetime):

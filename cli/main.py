@@ -29,6 +29,7 @@ from cli.models import AnalystType
 from cli.utils import *
 from cli.announcements import fetch_announcements, display_announcements
 from cli.stats_handler import StatsCallbackHandler
+from tradingagents.dataflows.notifications import send_telegram_message, format_telegram_trade_signal
 
 console = Console()
 
@@ -1158,6 +1159,19 @@ def run_analysis():
             report_file = save_report_to_disk(final_state, selections["ticker"], save_path)
             console.print(f"\n[green]✓ Report saved to:[/green] {save_path.resolve()}")
             console.print(f"  [dim]Complete report:[/dim] {report_file.name}")
+            
+            # Send Telegram Notification
+            console.print("\n[yellow]Sending Telegram notification...[/yellow]")
+            tg_msg = format_telegram_trade_signal(
+                selections["ticker"], 
+                selections["analysis_date"], 
+                final_state.get("final_trade_decision", "")
+            )
+            if send_telegram_message(tg_msg):
+                console.print("[green]✓ Telegram message sent successfully![/green]")
+            else:
+                console.print("[red]✗ Failed to send Telegram message. Check your .env configuration.[/red]")
+                
         except Exception as e:
             console.print(f"[red]Error saving report: {e}[/red]")
 
