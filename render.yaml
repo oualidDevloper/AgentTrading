@@ -1,11 +1,10 @@
 services:
-  - type: cron
+  - type: worker
     name: trading-agents-automation
     env: docker
     dockerContext: .
     dockerfilePath: Dockerfile
     plan: free # or your preferred plan
-    schedule: "30 14 * * 1-5" # 14:30 UTC = 9:30 AM EST (Market Open), Mon-Fri
     envVars:
       - key: OPENAI_API_KEY
         sync: false

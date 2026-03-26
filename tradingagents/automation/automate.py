@@ -100,4 +100,19 @@ def run_daily_automation():
     print(f"\nAutomated analysis finished: {datetime.datetime.now()}")
 
 if __name__ == "__main__":
-    run_daily_automation()
+    import schedule
+    import time
+    
+    print("Initializing internal scheduler for Render free tier worker...")
+    print("Configuration: Run at 14:30 UTC Mon-Fri.")
+
+    schedule.every().monday.at("14:30").do(run_daily_automation)
+    schedule.every().tuesday.at("14:30").do(run_daily_automation)
+    schedule.every().wednesday.at("14:30").do(run_daily_automation)
+    schedule.every().thursday.at("14:30").do(run_daily_automation)
+    schedule.every().friday.at("14:30").do(run_daily_automation)
+
+    # Note: Docker containers on Render run in UTC timezone by default.
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
