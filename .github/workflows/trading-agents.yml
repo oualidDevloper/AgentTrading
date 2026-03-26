@@ -1,0 +1,35 @@
+name: Trading Agents - Daily Analysis
+
+on:
+  schedule:
+    - cron: "30 14 * * 1-5"  # 14:30 UTC = 9:30 AM EST, Mon-Fri
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  run-trading-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Trading Analysis
+        env:
+          ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          LLM_PROVIDER: z.ai
+          LLM_MODEL: glm-4.7-flash
+          PYTHONPATH: ${{ github.workspace }}
+        run: python -c "from tradingagents.automation.automate import run_daily_automation; run_daily_automation()"
