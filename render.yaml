@@ -1,5 +1,5 @@
 services:
-  - type: worker
+  - type: cron
     name: trading-agents-automation
     env: docker
     dockerContext: .
