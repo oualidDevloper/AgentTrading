@@ -6,6 +6,8 @@ services:
     dockerfilePath: Dockerfile
     plan: free # or your preferred plan
     envVars:
+      - key: ZHIPUAI_API_KEY
+        sync: false
       - key: OPENAI_API_KEY
         sync: false
       - key: GOOGLE_API_KEY
@@ -17,8 +19,8 @@ services:
       - key: TELEGRAM_CHAT_ID
         sync: false
       - key: LLM_PROVIDER
-        value: openai # or z.ai
+        value: z.ai
       - key: LLM_MODEL
-        value: gpt-4o
+        value: glm3.7
       - key: PYTHONPATH
         value: "/"
