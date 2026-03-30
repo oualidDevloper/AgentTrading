@@ -57,14 +57,16 @@ def run_daily_automation():
                 # 3. Send Notification
                 report_content = final_state.get("final_trade_decision", "")
                 if report_content:
-                    print(f"Analysis complete for {ticker}. Sending notification...")
+                    print(f"Analysis complete for {ticker}. Final decision length: {len(report_content)} characters.")
+                    print(f"Decision preview: {report_content[:100]}...")
                     tg_msg = format_telegram_trade_signal(ticker, analysis_date, report_content)
+                    print(f"Formatted Telegram message for {ticker}. Sending...")
                     if send_telegram_message(tg_msg):
-                        print(f"✓ Telegram message sent for {ticker}")
+                        print(f"✓ Telegram message SUCCESSFULLY sent for {ticker}")
                     else:
-                        print(f"✗ Failed to send Telegram message for {ticker}")
+                        print(f"✗ FAILED to send Telegram message for {ticker}. Check TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.")
                 else:
-                    print(f"No report generated for {ticker}")
+                    print(f"⚠ No report generated for {ticker}. The 'final_trade_decision' key was empty in the final state.")
                 
                 break # Success, exit retry loop
                 
@@ -83,12 +85,14 @@ def run_daily_automation():
                     pass
 
                 if "429" in str(e) or "1302" in str(e):
-                    print(f"Rate limit hit during {ticker} (Attempt {attempt+1}/{max_retries}). Waiting {retry_delay}s...")
+                    print(f"RATE LIMIT HIT during {ticker} (Attempt {attempt+1}/{max_retries}). Waiting {retry_delay}s...")
                     time.sleep(retry_delay)
                     retry_delay *= 2 # Exponential backoff
                 else:
-                    print(f"Full error for {ticker}: {e}")
-                    # Don't break here, we might want to try other stocks if this one failed due to 500
+                    print(f"CRITICAL ERROR for {ticker}: {e}")
+                    # Log full traceback for debugging (if we had a logger, but print works for CI)
+                    import traceback
+                    traceback.print_exc()
                     break
                     
         # Add delay between different stocks

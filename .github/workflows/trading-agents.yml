@@ -2,7 +2,7 @@ name: Trading Agents - Daily Analysis
 
 on:
   schedule:
-    - cron: "30 14 * * 1-5"  # 14:30 UTC = 9:30 AM EST, Mon-Fri
+    - cron: "35 13 * * 1-5"  # 13:35 UTC = 9:35 AM EST, Mon-Fri (Adjusted for market open)
   workflow_dispatch:  # Allow manual trigger
 
 jobs:

@@ -32,15 +32,15 @@ Guidelines for Decision-Making:
 
 Deliverables (MANDATORY FORMAT):
 1. **Action**: Clearly state BUY, SELL, or HOLD.
-2. **Trade Levels**: 
+2. **Trade Levels** (Must be logical): 
    - **Entry Point**: $XXX.XX
-   - **Stop Loss (SL)**: $XXX.XX
-   - **Take Profit 1 (TP1)**: $XXX.XX
-   - **Take Profit 2 (TP2)**: $XXX.XX
-   - **Take Profit 3 (TP3)**: $XXX.XX
+   - **Stop Loss (SL)**: $XXX.XX (Must be < Entry for BUY, > Entry for SELL)
+   - **Take Profit 1 (TP1)**: $XXX.XX (Must be > Entry for BUY, < Entry for SELL)
+   - **Take Profit 2 (TP2)**: $XXX.XX (Must be > TP1 for BUY, < TP1 for SELL)
+   - **Take Profit 3 (TP3)**: $XXX.XX (Must be > TP2 for BUY, < TP2 for SELL)
 3. **Rationale**: A detailed paragraph explaining the choice.
 
-YOUR ENTIRE RESPONSE MUST INCLUDE THE ABOVE LEVELS OR AT LEAST ONE COMPREHENSIVE TP. DO NOT SKIP THESE.
+YOUR ENTIRE RESPONSE MUST INCLUDE THE ABOVE LEVELS OR AT LEAST ONE COMPREHENSIVE TP/SL PAIR. DO NOT SKIP THESE. ENSURE THEY ARE MATHEMATICALLY CONSISTENT WITH THE ACTION.
 
 ---
 

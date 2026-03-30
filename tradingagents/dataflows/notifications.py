@@ -72,6 +72,10 @@ def format_telegram_trade_signal(ticker: str, analysis_date: str, report_content
              # Fallback for single TP
              levels["TP1"] = line.split(':', 1)[-1].strip() if ':' in line else line.strip()
 
+    for label, val in levels.items():
+        if val == "N/A":
+            print(f"⚠ Warning: Could not find '{label}' level in report for {ticker}")
+
     msg += f"Entry: {levels['Entry']}\n"
     msg += f"Stop Loss: {levels['Stop Loss']}\n"
     msg += f"Take Profit 1: {levels['TP1']}\n"
