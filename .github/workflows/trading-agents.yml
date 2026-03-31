@@ -9,7 +9,7 @@ jobs:
   run-trading-analysis:
     runs-on: ubuntu-latest
     environment: AgentTrading
-    timeout-minutes: 60
+    timeout-minutes: 360
 
     steps:
       - name: Checkout repository
