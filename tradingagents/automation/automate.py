@@ -1,6 +1,7 @@
 import os
 import datetime
 import time
+import concurrent.futures
 from dotenv import load_dotenv
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.automation.stock_selector import get_interesting_stocks
@@ -51,8 +52,17 @@ def run_daily_automation():
         
         for attempt in range(max_retries):
             try:
-                # Run the graph using the propagator
-                final_state, decision = graph_engine.propagate(ticker, analysis_date)
+                # Run the graph using the propagator with a 30-minute timeout
+                timeout_sec = int(os.getenv("ANALYSIS_TIMEOUT_SECONDS", "1800"))
+                print(f"Running analysis with {timeout_sec}s timeout...")
+                
+                with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                    future = executor.submit(graph_engine.propagate, ticker, analysis_date)
+                    try:
+                        final_state, decision = future.result(timeout=timeout_sec)
+                    except concurrent.futures.TimeoutError:
+                        print(f"⌛ TIMEOUT: Analysis for {ticker} exceeded {timeout_sec}s. Skipping to next stock.")
+                        break # Exit retry loop for this ticker
                 
                 # 3. Send Notification
                 report_content = final_state.get("final_trade_decision", "")

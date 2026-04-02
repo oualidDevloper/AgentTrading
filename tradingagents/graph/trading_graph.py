@@ -200,12 +200,15 @@ class TradingAgentsGraph:
         if self.debug:
             # Debug mode with tracing
             trace = []
+            last_msg_id = None
             for chunk in self.graph.stream(init_agent_state, **args):
-                if len(chunk["messages"]) == 0:
-                    pass
-                else:
-                    chunk["messages"][-1].pretty_print()
-                    trace.append(chunk)
+                if "messages" in chunk and chunk["messages"]:
+                    new_msg = chunk["messages"][-1]
+                    # Only print if this is a new message we haven't seen before
+                    if hasattr(new_msg, "id") and new_msg.id != last_msg_id:
+                        new_msg.pretty_print()
+                        last_msg_id = new_msg.id
+                trace.append(chunk)
 
             final_state = trace[-1]
         else:

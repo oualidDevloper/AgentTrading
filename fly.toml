@@ -1,0 +1,15 @@
+app = "trading-agents-automation"
+primary_region = "cdg"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PYTHONPATH = "/app"
+  LLM_PROVIDER = "z.ai"
+  LLM_MODEL = "glm-4.7-flash"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
