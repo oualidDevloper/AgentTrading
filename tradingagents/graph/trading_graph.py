@@ -138,6 +138,10 @@ class TradingAgentsGraph:
         kwargs = {}
         provider = self.config.get("llm_provider", "").lower()
 
+        # Add timeout from config if present
+        if "timeout" in self.config:
+            kwargs["timeout"] = self.config["timeout"]
+
         if provider == "google":
             thinking_level = self.config.get("google_thinking_level")
             if thinking_level:

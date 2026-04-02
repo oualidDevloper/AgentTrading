@@ -11,8 +11,22 @@ class ConditionalLogic:
         self.max_debate_rounds = max_debate_rounds
         self.max_risk_discuss_rounds = max_risk_discuss_rounds
 
+    def check_early_exit(self, state: AgentState) -> bool:
+        """Detect if an analyst has already provided a final decision."""
+        if not state["messages"]:
+            return False
+            
+        last_message = state["messages"][-1]
+        content = str(last_message.content)
+        
+        # Check for the standardized stop signal
+        return "FINAL TRANSACTION PROPOSAL" in content
+
     def should_continue_market(self, state: AgentState):
         """Determine if market analysis should continue."""
+        if self.check_early_exit(state):
+            return "Quick Exit"
+            
         messages = state["messages"]
         last_message = messages[-1]
         if last_message.tool_calls:
@@ -21,6 +35,9 @@ class ConditionalLogic:
 
     def should_continue_social(self, state: AgentState):
         """Determine if social media analysis should continue."""
+        if self.check_early_exit(state):
+            return "Quick Exit"
+            
         messages = state["messages"]
         last_message = messages[-1]
         if last_message.tool_calls:
@@ -29,6 +46,9 @@ class ConditionalLogic:
 
     def should_continue_news(self, state: AgentState):
         """Determine if news analysis should continue."""
+        if self.check_early_exit(state):
+            return "Quick Exit"
+            
         messages = state["messages"]
         last_message = messages[-1]
         if last_message.tool_calls:
@@ -37,6 +57,9 @@ class ConditionalLogic:
 
     def should_continue_fundamentals(self, state: AgentState):
         """Determine if fundamentals analysis should continue."""
+        if self.check_early_exit(state):
+            return "Quick Exit"
+            
         messages = state["messages"]
         last_message = messages[-1]
         if last_message.tool_calls:

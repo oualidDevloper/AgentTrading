@@ -108,7 +108,13 @@ class GraphSetup:
         # Create workflow
         workflow = StateGraph(AgentState)
 
+        # Quick exit node for early stop
+        def quick_exit_node(state):
+            last_message = state["messages"][-1]
+            return {"final_trade_decision": last_message.content}
+
         # Add analyst nodes to the graph
+        workflow.add_node("Quick Exit", quick_exit_node)
         for analyst_type, node in analyst_nodes.items():
             workflow.add_node(f"{analyst_type.capitalize()} Analyst", node)
             workflow.add_node(
@@ -141,9 +147,14 @@ class GraphSetup:
             workflow.add_conditional_edges(
                 current_analyst,
                 getattr(self.conditional_logic, f"should_continue_{analyst_type}"),
-                [current_tools, current_clear],
+                {
+                    current_tools: current_tools,
+                    current_clear: current_clear,
+                    "Quick Exit": "Quick Exit",
+                },
             )
             workflow.add_edge(current_tools, current_analyst)
+            workflow.add_edge("Quick Exit", END)
 
             # Connect to next analyst or to Bull Researcher if this is the last analyst
             if i < len(selected_analysts) - 1:

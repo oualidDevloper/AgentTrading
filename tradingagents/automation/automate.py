@@ -42,6 +42,9 @@ def run_daily_automation():
     if provider == "z.ai":
         config["backend_url"] = "https://api.z.ai/api/paas/v4"
     
+    # Set a per-agent timeout of 90 seconds to prevent hangs
+    config["timeout"] = 90
+    
     graph_engine = TradingAgentsGraph(selected_analysts=selected_analysts, config=config, debug=True)
     
     for i, ticker in enumerate(stocks):
