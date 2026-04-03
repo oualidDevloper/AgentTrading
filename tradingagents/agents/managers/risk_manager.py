@@ -22,25 +22,33 @@ def create_risk_manager(llm, memory):
         for i, rec in enumerate(past_memories, 1):
             past_memory_str += rec["recommendation"] + "\n\n"
 
-        prompt = f"""As the Risk Management Judge and Debate Facilitator, your goal is to evaluate the debate between three risk analysts—Aggressive, Neutral, and Conservative—and determine the best course of action for the trader. Your decision must result in a clear recommendation: Buy, Sell, or Hold. Choose Hold only if strongly justified by specific arguments, not as a fallback when all sides seem valid. Strive for clarity and decisiveness.
+        prompt = f"""As the Risk Management Judge and Debate Facilitator, your goal is to evaluate the debate between three risk analysts—Aggressive, Neutral, and Conservative—and determine the best course of action for {company_name}. Your decision must result in a clear recommendation: Buy, Sell, or Hold. Choose Hold only if strongly justified by specific arguments, not as a fallback when all sides seem valid. Strive for clarity and decisiveness.
+
+**CURRENT MARKET DATA (USE THIS FOR YOUR PRICE LEVELS):**
+{market_research_report}
 
 Guidelines for Decision-Making:
 1. **Summarize Key Arguments**: Extract the strongest points from each analyst, focusing on relevance to the context.
 2. **Provide Rationale**: Support your recommendation with direct quotes and counterarguments from the debate.
 3. **Refine the Trader's Plan**: Start with the trader's original plan, **{trader_plan}**, and adjust it based on the analysts' insights.
-4. **Learn from Past Mistakes**: Use lessons from **{past_memory_str}** to address prior misjudgments and improve the decision you are making now to make sure you don't make a wrong BUY/SELL/HOLD call that loses money.
+4. **Learn from Past Mistakes**: Use lessons from **{past_memory_str}** to address prior misjudgments.
+5. **USE THE CURRENT PRICE**: Look at the latest Close price in the market data above. Your Entry must be close to this current price. Do NOT invent prices.
+6. **CRITICAL: Logical Level Check**: Before finishing, you MUST double-check that your levels make sense for the Action:
+   - If Action is **BUY**: You expect price to go UP. Therefore: Stop Loss < Entry < TP1 < TP2 < TP3.
+   - If Action is **SELL**: You expect price to go DOWN. Therefore: Stop Loss > Entry > TP1 > TP2 > TP3.
+   - **DO NOT** set a Take Profit that is "worse" than your Entry price.
 
 Deliverables (MANDATORY FORMAT):
 1. **Action**: Clearly state BUY, SELL, or HOLD.
-2. **Trade Levels** (Must be logical): 
-   - **Entry Point**: $XXX.XX
-   - **Stop Loss (SL)**: $XXX.XX (Must be < Entry for BUY, > Entry for SELL)
-   - **Take Profit 1 (TP1)**: $XXX.XX (Must be > Entry for BUY, < Entry for SELL)
-   - **Take Profit 2 (TP2)**: $XXX.XX (Must be > TP1 for BUY, < TP1 for SELL)
-   - **Take Profit 3 (TP3)**: $XXX.XX (Must be > TP2 for BUY, < TP2 for SELL)
+2. **Trade Levels** (MUST be mathematically consistent with the current price):
+   - **Entry Point**: $XXX.XX (must be near the current market price)
+   - **Stop Loss (SL)**: $XXX.XX
+   - **Take Profit 1 (TP1)**: $XXX.XX
+   - **Take Profit 2 (TP2)**: $XXX.XX
+   - **Take Profit 3 (TP3)**: $XXX.XX
 3. **Rationale**: A detailed paragraph explaining the choice.
 
-YOUR ENTIRE RESPONSE MUST INCLUDE THE ABOVE LEVELS OR AT LEAST ONE COMPREHENSIVE TP/SL PAIR. DO NOT SKIP THESE. ENSURE THEY ARE MATHEMATICALLY CONSISTENT WITH THE ACTION.
+YOUR ENTIRE RESPONSE MUST INCLUDE THE ABOVE LEVELS. ENSURE THEY ARE MATHEMATICALLY CONSISTENT WITH THE ACTION. IF YOU PROPOSE A BUY, ALL TPs MUST BE HIGHER THAN ENTRY. IF YOU PROPOSE A SELL, ALL TPs MUST BE LOWER THAN ENTRY.
 
 ---
 

@@ -12,15 +12,30 @@ class ConditionalLogic:
         self.max_risk_discuss_rounds = max_risk_discuss_rounds
 
     def check_early_exit(self, state: AgentState) -> bool:
-        """Detect if an analyst has already provided a final decision."""
+        """Detect if an analyst has already provided a final decision.
+        
+        Only triggers if:
+        1. The message contains 'FINAL TRANSACTION PROPOSAL'
+        2. The message has no pending tool calls (i.e., it's a final response, not mid-analysis)
+        3. The message also contains a clear action (BUY/SELL/HOLD)
+        """
         if not state["messages"]:
             return False
             
         last_message = state["messages"][-1]
-        content = str(last_message.content)
         
-        # Check for the standardized stop signal
-        return "FINAL TRANSACTION PROPOSAL" in content
+        # Don't exit if there are pending tool calls
+        if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+            return False
+        
+        content = str(last_message.content).upper()
+        
+        # Must have the stop phrase AND a clear action
+        if "FINAL TRANSACTION PROPOSAL" not in content:
+            return False
+        
+        has_action = any(action in content for action in ["**BUY**", "**SELL**", "**HOLD**"])
+        return has_action
 
     def should_continue_market(self, state: AgentState):
         """Determine if market analysis should continue."""
