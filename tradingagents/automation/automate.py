@@ -30,21 +30,21 @@ def run_daily_automation():
     analysis_date = datetime.datetime.now().strftime("%Y-%m-%d")
     
     # Use Z.AI (ZhipuAI) or fallback to OpenAI
-    provider = os.getenv("LLM_PROVIDER", "openai")
-    model = os.getenv("LLM_MODEL", "gpt-4o-mini")
-    deep_model = os.getenv("DEEP_LLM_MODEL", "gpt-4o")
+    provider = os.getenv("LLM_PROVIDER", "z.ai")
+    deep_provider = os.getenv("DEEP_LLM_PROVIDER", "openrouter")
+    model = os.getenv("LLM_MODEL", "glm-4-flash")
+    deep_model = os.getenv("DEEP_LLM_MODEL", "google/gemini-2.0-flash-exp:free")
     
-    print(f"Using Provider: {provider}, Quick Model: {model}, Deep Model: {deep_model}")
+    print(f"Using Provider: {provider}, Quick Model: {model} | Deep Provider: {deep_provider}, Deep Model: {deep_model}")
     
     # Initialize Graph with market + news analysts for richer context
     selected_analysts = ["market", "news"]
     
     config = DEFAULT_CONFIG.copy()
     config["llm_provider"] = provider
+    config["deep_llm_provider"] = deep_provider
     config["deep_think_llm"] = deep_model
     config["quick_think_llm"] = model
-    if provider == "z.ai":
-        config["backend_url"] = "https://open.bigmodel.cn/api/paas/v4"
     
     # Set a per-agent timeout of 240 seconds to prevent hangs but allow deep thinking
     config["timeout"] = int(os.getenv("LLM_TIMEOUT", "240"))
@@ -57,7 +57,7 @@ def run_daily_automation():
         extraction_client = create_llm_client(
             provider=provider,
             model=model,
-            base_url=config.get("backend_url"),
+            base_url="https://open.bigmodel.cn/api/paas/v4" if provider == "z.ai" else None,
             timeout=30,
         )
         extraction_llm = extraction_client.get_llm()

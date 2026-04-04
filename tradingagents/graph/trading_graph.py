@@ -72,23 +72,31 @@ class TradingAgentsGraph:
         )
 
         # Initialize LLMs with provider-specific thinking configuration
-        llm_kwargs = self._get_provider_kwargs()
+        quick_provider = self.config["llm_provider"]
+        deep_provider = self.config.get("deep_llm_provider", quick_provider)
+        
+        quick_llm_kwargs = self._get_provider_kwargs(quick_provider)
+        deep_llm_kwargs = self._get_provider_kwargs(deep_provider)
 
         # Add callbacks to kwargs if provided (passed to LLM constructor)
         if self.callbacks:
-            llm_kwargs["callbacks"] = self.callbacks
+            quick_llm_kwargs["callbacks"] = self.callbacks
+            deep_llm_kwargs["callbacks"] = self.callbacks
+            
+        quick_base_url = "https://open.bigmodel.cn/api/paas/v4" if quick_provider == "z.ai" else None
+        deep_base_url = "https://open.bigmodel.cn/api/paas/v4" if deep_provider == "z.ai" else None
 
         deep_client = create_llm_client(
-            provider=self.config["llm_provider"],
+            provider=deep_provider,
             model=self.config["deep_think_llm"],
-            base_url=self.config.get("backend_url"),
-            **llm_kwargs,
+            base_url=deep_base_url,
+            **deep_llm_kwargs,
         )
         quick_client = create_llm_client(
-            provider=self.config["llm_provider"],
+            provider=quick_provider,
             model=self.config["quick_think_llm"],
-            base_url=self.config.get("backend_url"),
-            **llm_kwargs,
+            base_url=quick_base_url,
+            **quick_llm_kwargs,
         )
 
         self.deep_thinking_llm = deep_client.get_llm()
@@ -133,10 +141,10 @@ class TradingAgentsGraph:
         # Set up the graph
         self.graph = self.graph_setup.setup_graph(selected_analysts)
 
-    def _get_provider_kwargs(self) -> Dict[str, Any]:
+    def _get_provider_kwargs(self, provider: str = None) -> Dict[str, Any]:
         """Get provider-specific kwargs for LLM client creation."""
         kwargs = {}
-        provider = self.config.get("llm_provider", "").lower()
+        provider = (provider or self.config.get("llm_provider", "")).lower()
 
         # Add timeout from config if present
         if "timeout" in self.config:
