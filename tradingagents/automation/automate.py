@@ -24,7 +24,7 @@ def run_daily_automation():
     print(f"Starting automated analysis: {datetime.datetime.now()}")
     
     # 1. Select stocks
-    stocks = get_interesting_stocks(limit=6) # Analyze top 6 interesting tickers
+    stocks = get_interesting_stocks(limit=3) # Analyze top 3 interesting tickers
     
     # 2. Setup Analysis Params
     analysis_date = datetime.datetime.now().strftime("%Y-%m-%d")
