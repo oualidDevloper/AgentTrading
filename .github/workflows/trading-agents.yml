@@ -33,7 +33,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           LLM_PROVIDER: z.ai
           DEEP_LLM_PROVIDER: openrouter
-          LLM_MODEL: glm-4-flash
+          LLM_MODEL: glm-4.7-flash
           DEEP_LLM_MODEL: meta-llama/llama-3.3-70b-instruct:free
           PYTHONPATH: ${{ github.workspace }}
         run: python -c "from tradingagents.automation.automate import run_daily_automation; run_daily_automation()"
