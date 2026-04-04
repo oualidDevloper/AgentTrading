@@ -109,9 +109,9 @@ def run_daily_automation():
                     rr = compute_rr_ratio(extracted_signal)
                     
                     is_qualified = True
-                    if action != "HOLD" and rr < 1.5:
+                    if action != "HOLD" and rr < 1.2:
                         is_qualified = False
-                        print(f"⚠ Signal rejected: {action} on {ticker} has low R/R ratio ({rr} < 1.5).")
+                        print(f"⚠ Signal rejected: {action} on {ticker} has low R/R ratio ({rr} < 1.2).")
                     
                     if is_qualified:
                         tg_msg = format_telegram_trade_signal(
