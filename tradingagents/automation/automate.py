@@ -46,8 +46,8 @@ def run_daily_automation():
     if provider == "z.ai":
         config["backend_url"] = "https://open.bigmodel.cn/api/paas/v4"
     
-    # Set a per-agent timeout of 90 seconds to prevent hangs
-    config["timeout"] = 90
+    # Set a per-agent timeout of 240 seconds to prevent hangs but allow deep thinking
+    config["timeout"] = int(os.getenv("LLM_TIMEOUT", "240"))
     
     graph_engine = TradingAgentsGraph(selected_analysts=selected_analysts, config=config, debug=True)
     
