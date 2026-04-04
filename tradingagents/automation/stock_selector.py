@@ -25,7 +25,9 @@ def get_interesting_stocks(limit=5):
     print(f"Scanning {len(tickers)} tickers for interesting opportunities...")
     
     results = []
-    for ticker_symbol in tickers:
+    for i, ticker_symbol in enumerate(tickers):
+        if i % 10 == 0:
+            print(f"[{i}/{len(tickers)}] Working on {ticker_symbol}...", flush=True)
         try:
             ticker = yf.Ticker(ticker_symbol)
             # Get 20 days of data to calculate metrics
