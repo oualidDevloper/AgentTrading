@@ -26,12 +26,12 @@ jobs:
 
       - name: Run Trading Analysis
         env:
-          ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          LLM_PROVIDER: z.ai
-          LLM_MODEL: glm-4.7-flash
-          DEEP_LLM_MODEL: glm-4.7
+          LLM_PROVIDER: google
+          LLM_MODEL: gemini-2.0-flash
+          DEEP_LLM_MODEL: gemini-2.0-flash
           PYTHONPATH: ${{ github.workspace }}
         run: python -c "from tradingagents.automation.automate import run_daily_automation; run_daily_automation()"
