@@ -7,7 +7,7 @@ def test_openrouter():
     load_dotenv()
     print("Testing OpenRouter integration...")
     provider = "openrouter"
-    model = "google/gemini-2.0-flash-exp:free"
+    model = "google/gemini-2.0-pro-exp-02-05:free"
     
     if not os.getenv('OPENROUTER_API_KEY'):
         print("❌ Error: OPENROUTER_API_KEY is not set.")

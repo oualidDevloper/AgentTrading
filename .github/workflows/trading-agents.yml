@@ -34,6 +34,6 @@ jobs:
           LLM_PROVIDER: z.ai
           DEEP_LLM_PROVIDER: openrouter
           LLM_MODEL: glm-4-flash
-          DEEP_LLM_MODEL: google/gemini-2.0-flash-exp:free
+          DEEP_LLM_MODEL: meta-llama/llama-3.3-70b-instruct:free
           PYTHONPATH: ${{ github.workspace }}
         run: python -c "from tradingagents.automation.automate import run_daily_automation; run_daily_automation()"
